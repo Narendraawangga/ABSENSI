@@ -34,7 +34,7 @@
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </span>
-            <input type="text" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-primary-500 focus:outline-none focus:ring focus:ring-primary-500/20" placeholder="Cari nama atau NIM...">
+            <input type="text" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-primary-500 focus:outline-none focus:ring focus:ring-primary-500/20" placeholder="Cari nama atau username...">
         </div>
     </div>
     
@@ -59,7 +59,7 @@
                         </div>
                         <div>
                             <div class="font-medium text-dark-navy">{{ $intern->name }}</div>
-                            <div class="text-xs text-gray-500">NIM: {{ $intern->internProfile->nim ?? '-' }}</div>
+
                         </div>
                     </td>
                     <td class="py-4 px-6 text-gray-700 font-medium">
@@ -116,10 +116,7 @@
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Username (Untuk Login)</label>
                                                     <input type="text" name="username" value="{{ $intern->username }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-1">NIM / NISN</label>
-                                                    <input type="text" name="nim" value="{{ $intern->internProfile->nim ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
-                                                </div>
+
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Universitas / Sekolah</label>
                                                     <input type="text" name="university" value="{{ $intern->internProfile->university ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
@@ -208,10 +205,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Username (Untuk Login)</label>
                                 <input type="text" name="username" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">NIM / NISN</label>
-                                <input type="text" name="nim" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
-                            </div>
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Universitas / Sekolah</label>
                                 <input type="text" name="university" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">

@@ -102,5 +102,57 @@
 </head>
 <body class="bg-background text-dark-navy antialiased">
     @yield('content')
+
+    <!-- Global Toast Notifications -->
+    <div x-data="{
+            showSuccess: {{ session('success') ? 'true' : 'false' }},
+            showError: {{ session('error') ? 'true' : 'false' }},
+            successMsg: '{{ addslashes(session('success') ?? '') }}',
+            errorMsg: '{{ addslashes(session('error') ?? '') }}'
+        }" 
+        x-init="
+            if(showSuccess) { setTimeout(() => showSuccess = false, 2000); }
+            if(showError) { setTimeout(() => showError = false, 2000); }
+        "
+        class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none">
+        
+        <!-- Success Toast -->
+        <div x-show="showSuccess" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-x-8"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 translate-x-8"
+             class="bg-white border-l-4 border-green-500 shadow-2xl rounded-lg p-4 flex items-center gap-4 min-w-[280px] pointer-events-auto"
+             style="display: none;">
+            <div class="bg-green-100 text-green-600 rounded-full p-2 flex items-center justify-center">
+                <i class="bi bi-check-circle-fill text-xl"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-800 text-sm">Berhasil!</h4>
+                <p class="text-xs text-gray-500 mt-0.5" x-text="successMsg"></p>
+            </div>
+        </div>
+
+        <!-- Error Toast -->
+        <div x-show="showError" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-x-8"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 translate-x-8"
+             class="bg-white border-l-4 border-red-500 shadow-2xl rounded-lg p-4 flex items-center gap-4 min-w-[280px] pointer-events-auto"
+             style="display: none;">
+            <div class="bg-red-100 text-red-600 rounded-full p-2 flex items-center justify-center">
+                <i class="bi bi-exclamation-triangle-fill text-xl"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-800 text-sm">Perhatian!</h4>
+                <p class="text-xs text-gray-500 mt-0.5" x-text="errorMsg"></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

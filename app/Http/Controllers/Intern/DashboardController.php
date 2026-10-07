@@ -109,6 +109,11 @@ class DashboardController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($internProfile->avatar && file_exists(public_path($internProfile->avatar))) {
+                unlink(public_path($internProfile->avatar));
+            }
+
             $file = $request->file('avatar');
             $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
             // Move to public/storage/avatars

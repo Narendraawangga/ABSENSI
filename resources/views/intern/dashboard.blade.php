@@ -11,19 +11,7 @@
     <!-- Tombol Check In/Out Dihilangkan -->
 </div>
 
-@if(session('success'))
-<div class="mb-6 p-4 rounded-lg bg-success/10 border border-success/20 text-success text-sm flex items-center gap-2">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-    {{ session('success') }}
-</div>
-@endif
 
-@if(session('error'))
-<div class="mb-6 p-4 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm flex items-center gap-2">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-    {{ session('error') }}
-</div>
-@endif
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">
@@ -141,22 +129,23 @@
             <h2 class="text-lg font-bold text-dark-navy mb-4 relative z-10">Pengaturan Galeri</h2>
             <p class="text-xs text-gray-500 mb-4 relative z-10">Atur foto profil dan warna latar belakang kartu Anda di halaman depan.</p>
             
-            <form action="{{ route('intern.avatar.update') }}" method="POST" enctype="multipart/form-data" class="relative z-10">
+            <form action="{{ route('intern.avatar.update') }}" method="POST" enctype="multipart/form-data" class="relative z-10" x-data="{ imageUrl: '{{ auth()->user()->internProfile && auth()->user()->internProfile->avatar ? asset(auth()->user()->internProfile->avatar) : '' }}' }">
                 @csrf
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <!-- Current Avatar Preview -->
                         <div class="w-20 h-20 rounded-2xl overflow-hidden border-4 border-gray-50 shadow-md flex-shrink-0 bg-gray-100 flex items-center justify-center">
-                            @if(auth()->user()->internProfile && auth()->user()->internProfile->avatar)
-                                <img src="{{ asset(auth()->user()->internProfile->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
-                            @else
+                            <template x-if="imageUrl">
+                                <img :src="imageUrl" class="w-full h-full object-cover" alt="Avatar">
+                            </template>
+                            <template x-if="!imageUrl">
                                 <span class="text-3xl font-bold text-gray-300">{{ substr(auth()->user()->name, 0, 1) }}</span>
-                            @endif
+                            </template>
                         </div>
                         
                         <div class="w-full">
                             <label class="block text-xs text-gray-500 mb-1">Pilih Foto Profil (Opsional)</label>
-                            <input type="file" name="avatar" id="avatar" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" accept="image/png, image/jpeg, image/jpg">
+                            <input type="file" name="avatar" id="avatar" @change="imageUrl = URL.createObjectURL($event.target.files[0])" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" accept="image/png, image/jpeg, image/jpg">
                         </div>
                     </div>
 

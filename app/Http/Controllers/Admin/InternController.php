@@ -30,7 +30,7 @@ class InternController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'nim' => 'required|string|max:255',
+
             'university' => 'required|string|max:255',
             'division' => 'required|string|max:255',
             'start_date' => 'required|date',
@@ -52,7 +52,7 @@ class InternController extends Controller
 
             InternProfile::create([
                 'user_id' => $user->id,
-                'nim' => $request->nim,
+
                 'university' => $request->university,
                 'division' => $request->division,
                 'start_date' => $request->start_date,
@@ -76,7 +76,7 @@ class InternController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,'.$user->id,
-            'nim' => 'required|string|max:255',
+
             'university' => 'required|string|max:255',
             'division' => 'required|string|max:255',
             'is_active' => 'required|boolean',
@@ -100,7 +100,7 @@ class InternController extends Controller
 
             $profile = InternProfile::firstOrCreate(['user_id' => $user->id]);
             $profile->update([
-                'nim' => $request->nim,
+
                 'university' => $request->university,
                 'division' => $request->division,
                 'start_date' => $request->start_date,
