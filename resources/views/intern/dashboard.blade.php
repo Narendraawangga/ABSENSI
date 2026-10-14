@@ -5,13 +5,50 @@
 <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
     <div>
         <h1 class="text-3xl font-bold text-dark-navy">Selamat pagi, {{ explode(' ', auth()->user()->name)[0] }} 👋</h1>
-        <p class="text-gray-500 mt-2">Hari ini: {{ now()->translatedFormat('l, d F Y') }}</p>
+        <p class="text-gray-500 mt-2">Hari ini: {{ now()->locale('id')->translatedFormat('l, d F Y') }}</p>
     </div>
     
     <!-- Tombol Check In/Out Dihilangkan -->
 </div>
 
-
+<!-- Announcements Section -->
+@if($announcements && $announcements->count() > 0)
+<div class="mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        @foreach($announcements as $ann)
+        @php
+            $bg = 'bg-blue-50'; $border = 'border-blue-200'; $text = 'text-blue-800'; $icon = 'text-blue-500';
+            if($ann->priority == 'high') {
+                $bg = 'bg-red-50'; $border = 'border-red-200'; $text = 'text-red-800'; $icon = 'text-red-500';
+            } elseif($ann->priority == 'medium') {
+                $bg = 'bg-yellow-50'; $border = 'border-yellow-200'; $text = 'text-yellow-800'; $icon = 'text-yellow-500';
+            }
+        @endphp
+        <div class="{{ $bg }} {{ $border }} border rounded-2xl p-5 relative overflow-hidden shadow-sm hover:-translate-y-1 transition-transform duration-300">
+            <!-- Decorative circle -->
+            <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-20 {{ $bg == 'bg-blue-50' ? 'bg-blue-400' : ($bg == 'bg-red-50' ? 'bg-red-400' : 'bg-yellow-400') }}"></div>
+            
+            <div class="flex gap-3 mb-2">
+                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm {{ $icon }}">
+                    @if($ann->priority == 'high')
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    @elseif($ann->priority == 'medium')
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    @else
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                    @endif
+                </div>
+                <div>
+                    <h3 class="font-bold {{ $text }} leading-tight">{{ $ann->title }}</h3>
+                    <p class="text-[11px] opacity-70 mt-0.5 {{ $text }}">{{ \Carbon\Carbon::parse($ann->created_at)->locale('id')->diffForHumans() }} &bull; Oleh {{ $ann->creator->name ?? 'Admin' }}</p>
+                </div>
+            </div>
+            <div class="{{ $text }} text-sm mt-3 whitespace-pre-wrap pl-1 relative z-10">{{ $ann->content }}</div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">

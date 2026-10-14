@@ -73,11 +73,29 @@
                 @endif
             </a>
 
+            <a href="{{ route('admin.announcements') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.announcements*') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                <i class="bi bi-megaphone-fill text-lg w-5 text-center"></i>
+                <span>Pengumuman</span>
+                @if(request()->routeIs('admin.announcements*'))
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-white"></span>
+                @endif
+            </a>
+
             <a href="{{ route('admin.reports') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.reports*') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
                 <i class="bi bi-bar-chart-fill text-lg w-5 text-center"></i>
                 <span>Laporan Kehadiran</span>
                 @if(request()->routeIs('admin.reports*'))
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-white"></span>
+                @endif
+            </a>
+
+            <a href="{{ route('admin.gallery-docs') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.gallery-docs*') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                <i class="bi bi-images text-lg w-5 text-center"></i>
+                <span>Galeri Dokumentasi</span>
+                @if(request()->routeIs('admin.gallery-docs*'))
                     <span class="ml-auto w-1.5 h-1.5 rounded-full bg-white"></span>
                 @endif
             </a>

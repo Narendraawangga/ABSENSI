@@ -8,26 +8,23 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        // Foto dokumentasi terbaru dari semua anak magang
-        $photos = DB::table('activity_attachments')
-            ->join('activities', 'activity_attachments.activity_id', '=', 'activities.id')
-            ->join('users', 'activities.user_id', '=', 'users.id')
-            ->leftJoin('intern_profiles', 'users.id', '=', 'intern_profiles.user_id')
-            ->whereNull('users.deleted_at')
-            ->select(
-                'activity_attachments.id',
-                'activity_attachments.file_path',
-                'activity_attachments.file_name',
-                'activities.title',
-                'activities.description',
-                'activities.date',
-                'users.name as intern_name',
-                'intern_profiles.division',
-                'intern_profiles.university'
-            )
-            ->orderByDesc('activities.date')
-            ->limit(60)
-            ->get();
+        // Foto dokumentasi dari folder storage/galeri
+        $galleryPath = public_path('storage/galeri');
+        $galleryImages = [];
+        if (\Illuminate\Support\Facades\File::exists($galleryPath)) {
+            $files = \Illuminate\Support\Facades\File::files($galleryPath);
+            foreach ($files as $file) {
+                $ext = strtolower($file->getExtension());
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                    $galleryImages[] = [
+                        'src' => asset('storage/galeri/' . $file->getFilename()),
+                        'name' => 'Dokumentasi Magang BPS',
+                        'date' => date('d M Y', filemtime($file->getPathname())),
+                    ];
+                }
+            }
+        }
+        $photos = $galleryImages;
 
         // Stats
         $totalInterns = DB::table('users')

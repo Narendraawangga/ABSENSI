@@ -52,7 +52,7 @@
             </thead>
             <tbody class="divide-y divide-gray-100 text-sm">
                 @forelse($interns as $intern)
-                <tr class="hover:bg-gray-50 transition-colors" x-data="{ openEdit: false }">
+                <tr class="hover:bg-gray-50 transition-colors" x-data="{ openEdit: {{ old('form_type') == 'edit_'.$intern->id && $errors->any() ? 'true' : 'false' }} }">
                     <td class="py-4 px-6 flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
                             {{ substr($intern->name, 0, 1) }}
@@ -107,31 +107,32 @@
                                         
                                         <form action="{{ route('admin.interns.update', $intern->id) }}" method="POST" id="form-edit-{{$intern->id}}">
                                             @csrf
+                                            <input type="hidden" name="form_type" value="edit_{{ $intern->id }}">
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                                                    <input type="text" name="name" value="{{ $intern->name }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="text" name="name" value="{{ old('form_type') == 'edit_'.$intern->id ? old('name', $intern->name) : $intern->name }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Username (Untuk Login)</label>
-                                                    <input type="text" name="username" value="{{ $intern->username }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="text" name="username" value="{{ old('form_type') == 'edit_'.$intern->id ? old('username', $intern->username) : $intern->username }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
 
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Universitas / Sekolah</label>
-                                                    <input type="text" name="university" value="{{ $intern->internProfile->university ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="text" name="university" value="{{ old('form_type') == 'edit_'.$intern->id ? old('university', $intern->internProfile->university ?? '') : ($intern->internProfile->university ?? '') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
                                                 <div class="md:col-span-2">
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Divisi / Penempatan</label>
-                                                    <input type="text" name="division" value="{{ $intern->internProfile->division ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="text" name="division" value="{{ old('form_type') == 'edit_'.$intern->id ? old('division', $intern->internProfile->division ?? '') : ($intern->internProfile->division ?? '') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai Magang</label>
-                                                    <input type="date" name="start_date" value="{{ $intern->internProfile->start_date ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="date" name="start_date" value="{{ old('form_type') == 'edit_'.$intern->id ? old('start_date', $intern->internProfile->start_date ?? '') : ($intern->internProfile->start_date ?? '') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai Magang</label>
-                                                    <input type="date" name="end_date" value="{{ $intern->internProfile->end_date ?? '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                                    <input type="date" name="end_date" value="{{ old('form_type') == 'edit_'.$intern->id ? old('end_date', $intern->internProfile->end_date ?? '') : ($intern->internProfile->end_date ?? '') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                                                 </div>
                                             </div>
 
@@ -140,7 +141,12 @@
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1">Reset Password</label>
-                                                        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin diubah" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500 bg-gray-50 focus:bg-white transition-colors">
+                                                        <div class="relative" x-data="{ showPassword: false }">
+                                                            <input :type="showPassword ? 'text' : 'password'" name="password" placeholder="Kosongkan jika tidak ingin diubah" class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md text-sm focus:border-primary-500 bg-gray-50 focus:bg-white transition-colors">
+                                                            <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                                <i class="bi" :class="showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill'"></i>
+                                                            </button>
+                                                        </div>
                                                         <p class="text-xs text-gray-500 mt-1">Hanya diisi jika anak magang lupa password.</p>
                                                     </div>
                                                     <div>
@@ -180,7 +186,7 @@
 </div>
 
 <!-- Modal Tambah Intern -->
-<div x-data="{ open: false }" 
+<div x-data="{ open: {{ old('form_type') == 'create' && $errors->any() ? 'true' : 'false' }} }" 
      x-show="open" 
      @open-modal.window="open = true" 
      @keydown.escape.window="open = false"
@@ -196,35 +202,41 @@
                     
                     <form action="{{ route('admin.interns.store') }}" method="POST" id="form-create">
                         @csrf
+                        <input type="hidden" name="form_type" value="create">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                                <input type="text" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="text" name="name" value="{{ old('form_type') == 'create' ? old('name') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Username (Untuk Login)</label>
-                                <input type="text" name="username" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="text" name="username" value="{{ old('form_type') == 'create' ? old('username') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Universitas / Sekolah</label>
-                                <input type="text" name="university" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="text" name="university" value="{{ old('form_type') == 'create' ? old('university') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Divisi / Penempatan</label>
-                                <input type="text" name="division" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="text" name="division" value="{{ old('form_type') == 'create' ? old('division') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai Magang</label>
-                                <input type="date" name="start_date" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="date" name="start_date" value="{{ old('form_type') == 'create' ? old('start_date') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai Magang</label>
-                                <input type="date" name="end_date" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <input type="date" name="end_date" value="{{ old('form_type') == 'create' ? old('end_date') : '' }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Password Awal (Sementara)</label>
-                                <input type="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                <div class="relative" x-data="{ showPassword: false }">
+                                    <input :type="showPassword ? 'text' : 'password'" name="password" required class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md text-sm focus:border-primary-500">
+                                    <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                        <i class="bi" :class="showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill'"></i>
+                                    </button>
+                                </div>
                                 <p class="text-xs text-gray-500 mt-1">Anak magang akan menggunakan password ini untuk login pertama kali.</p>
                             </div>
                         </div>

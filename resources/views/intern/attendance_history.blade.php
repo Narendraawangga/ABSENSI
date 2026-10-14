@@ -19,7 +19,7 @@
                 @forelse($attendances as $att)
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="py-4 px-6 font-medium text-dark-navy">
-                        {{ \Carbon\Carbon::parse($att->date)->translatedFormat('l, d M Y') }}
+                        {{ \Carbon\Carbon::parse($att->date)->locale('id')->translatedFormat('l, d M Y') }}
                     </td>
                     <td class="py-4 px-6 text-gray-700">
                         {{ $att->duration ? round($att->duration / 60, 1) . ' Jam' : '-' }}

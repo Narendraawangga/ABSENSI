@@ -54,13 +54,16 @@
             </div>
 
             {{-- Password --}}
-            <div class="group relative">
+            <div class="group relative" x-data="{ showPassword: false }">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i class="bi bi-key-fill text-white/50 text-lg"></i>
                 </div>
-                <input type="password" id="password" name="password"
+                <input x-bind:type="showPassword ? 'text' : 'password'" id="password" name="password"
                        required placeholder="Password"
-                       class="w-full pl-12 pr-4 py-4 rounded-xl text-sm font-medium outline-none transition-all duration-300 border border-white/10 bg-white/5 text-white placeholder-white/50 focus:bg-white/10 focus:border-white/30 focus:shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                       class="w-full pl-12 pr-12 py-4 rounded-xl text-sm font-medium outline-none transition-all duration-300 border border-white/10 bg-white/5 text-white placeholder-white/50 focus:bg-white/10 focus:border-white/30 focus:shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white transition-colors focus:outline-none">
+                    <i class="bi text-lg" :class="showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill'"></i>
+                </button>
             </div>
 
             {{-- Remember me --}}

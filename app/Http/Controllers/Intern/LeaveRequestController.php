@@ -21,9 +21,30 @@ class LeaveRequestController extends Controller
         $request->validate([
             'type' => 'required|string',
             'date_start' => 'required|date',
-            'date_end' => 'required|date|after_or_equal:date_start',
+            'date_end' => [
+                'required',
+                'date',
+                'after_or_equal:date_start',
+                function ($attribute, $value, $fail) use ($request) {
+                    $start = \Carbon\Carbon::parse($request->date_start);
+                    $end = \Carbon\Carbon::parse($value);
+                    if ($start->diffInDays($end) > 2) {
+                        $fail('Pengajuan dalam satu periode maksimal 3 hari.');
+                    }
+                },
+            ],
             'reason' => 'required|string',
         ]);
+
+        $start = \Carbon\Carbon::parse($request->date_start);
+        $existingLeave = LeaveRequest::where('user_id', Auth::id())
+            ->whereMonth('date_start', $start->month)
+            ->whereYear('date_start', $start->year)
+            ->exists();
+
+        if ($existingLeave) {
+            return back()->with('error', 'Anda sudah mengajukan cuti/izin pada bulan ini. Pengajuan hanya diperbolehkan satu kali dalam sebulan.');
+        }
 
         LeaveRequest::create([
             'user_id' => Auth::id(),

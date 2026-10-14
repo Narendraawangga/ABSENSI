@@ -288,12 +288,24 @@
             break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 16px;
             overflow: hidden; border-radius: 12px; cursor: pointer; position: relative;
             border: 1px solid rgba(255,255,255,0.15);
-            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease, border-color 0.5s ease; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         .standalone-gallery .gallery-thumb.is-hidden { opacity: 0; transform: scale(0.6) translateY(40px); }
         .standalone-gallery .gallery-thumb.pop-in { animation: galleryPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .standalone-gallery .gallery-thumb:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-color: white; }
-        .standalone-gallery .gallery-thumb img { width: 100%; display: block; object-fit: cover; }
+        .standalone-gallery .gallery-thumb:hover { 
+            transform: translateY(-10px) scale(1.05) rotate(3deg); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+            border-color: rgba(255,255,255,0.8); 
+            z-index: 10;
+        }
+        .standalone-gallery .gallery-thumb img { 
+            width: 100%; display: block; object-fit: cover; 
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .standalone-gallery .gallery-thumb:hover img {
+            transform: scale(1.1) rotate(-3deg);
+        }
         
         .standalone-gallery .gallery-thumb .th-overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.6);
@@ -360,11 +372,18 @@
         .intern-mini-list { display: flex; flex-direction: column; gap: 8px; }
         .intern-mini {
             display: flex; align-items: center; gap: 10px;
-            padding: 8px; border-radius: 8px;
+            padding: 10px 12px; border-radius: 12px;
             background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.2s; cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+            cursor: pointer; position: relative;
         }
-        .intern-mini:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); transform: translateX(3px); }
+        .intern-mini:hover { 
+            background: rgba(255,255,255,0.25); 
+            border-color: rgba(255,255,255,0.6); 
+            transform: scale(1.05) rotate(2deg) translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            z-index: 10;
+        }
         .im-av {
             width: 36px; height: 36px; border-radius: 50%;
             background: rgba(255,255,255,0.2); color: white;
@@ -579,29 +598,12 @@
             <button class="g-filter active">Semua Aktivitas</button>
         </div>
 
-        <!-- Dummy Data for Preview -->
         <div class="gallery-grid">
-            @php
-                $dummies = [
-                    ['src' => 'https://picsum.photos/400/600?random=1', 'name' => 'Budi Santoso', 'date' => '12 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/300?random=2', 'name' => 'Siti Aminah', 'date' => '14 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/500?random=3', 'name' => 'Agus Setiawan', 'date' => '15 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/400?random=4', 'name' => 'Dewi Lestari', 'date' => '18 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/700?random=5', 'name' => 'Rina Melati', 'date' => '20 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/350?random=6', 'name' => 'Anton Saputra', 'date' => '22 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/450?random=7', 'name' => 'Fajar Nugroho', 'date' => '24 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/550?random=8', 'name' => 'Dinda Kirana', 'date' => '26 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/320?random=9', 'name' => 'Hendra Putra', 'date' => '28 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/620?random=10', 'name' => 'Sinta Nur', 'date' => '30 Okt 2023'],
-                    ['src' => 'https://picsum.photos/400/480?random=11', 'name' => 'Rizky Fadillah', 'date' => '02 Nov 2023'],
-                    ['src' => 'https://picsum.photos/400/380?random=12', 'name' => 'Yuni Arta', 'date' => '05 Nov 2023']
-                ];
-            @endphp
-            @foreach($dummies as $d)
+            @forelse($photos as $d)
             <div class="gallery-thumb"
                  data-src="{{ $d['src'] }}"
                  data-name="{{ $d['name'] }}"
-                 data-title="Contoh Dokumentasi"
+                 data-title="Galeri"
                  data-date="{{ $d['date'] }}"
                  onclick="openLightbox(this)">
                 <img src="{{ $d['src'] }}" alt="{{ $d['name'] }}" loading="lazy">
@@ -609,7 +611,11 @@
                     <span>{{ $d['name'] }}<br>{{ $d['date'] }}</span>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div style="color: white; padding: 2rem; text-align: center; width: 100%; grid-column: 1 / -1;">
+                Belum ada foto dokumentasi.
+            </div>
+            @endforelse
         </div>
     </div>
 </section>
@@ -648,8 +654,8 @@
         @if($interns->count() > 0)
         <h2 class="col-title" style="font-size:1.2rem; margin-bottom:1rem;">Tim Magang</h2>
         <div class="intern-mini-list">
-            @foreach($interns->take(5) as $intern)
-            <div class="intern-mini">
+            @foreach($interns as $index => $intern)
+            <div class="intern-mini {{ $index >= 5 ? 'intern-hidden' : '' }}" {!! $index >= 5 ? 'style="display:none;"' : '' !!}>
                 <div class="im-av">
                     @if($intern->avatar)
                         <img src="{{ asset($intern->avatar) }}" alt="{{ $intern->name }}">
@@ -670,7 +676,9 @@
             @endforeach
             @if($interns->count() > 5)
             <div style="text-align:center; margin-top:4px;">
-                <span class="tag tag-blue">+{{ $interns->count() - 5 }} lainnya</span>
+                <button type="button" class="tag tag-blue" style="border:none; cursor:pointer;" onclick="toggleInterns(this, {{ $interns->count() - 5 }})">
+                    +{{ $interns->count() - 5 }} lainnya
+                </button>
             </div>
             @endif
         </div>
@@ -797,6 +805,26 @@
             document.body.style.backgroundColor = hsImgs[0].getAttribute('data-color') || '#e07b1a';
         }
     }
+
+    // ── Interns Toggle ──
+    window.toggleInterns = function(btn, remaining) {
+        var hiddenItems = document.querySelectorAll('.intern-hidden');
+        var isShowing = false;
+        hiddenItems.forEach(function(el) {
+            if (el.style.display === 'none') {
+                el.style.display = 'flex';
+                isShowing = true;
+            } else {
+                el.style.display = 'none';
+            }
+        });
+
+        if (isShowing) {
+            btn.innerHTML = 'Sembunyikan';
+        } else {
+            btn.innerHTML = '+' + remaining + ' lainnya';
+        }
+    };
 
     // ── Lightbox ──
     window.openLightbox = function(el) {

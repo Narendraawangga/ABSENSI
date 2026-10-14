@@ -18,6 +18,8 @@
 </div>
 @endif
 
+
+
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -65,7 +67,7 @@
 </div>
 
 <!-- Modal Form -->
-<div x-data="{ open: false }" 
+<div x-data="{ open: {{ $errors->any() || session('error') ? 'true' : 'false' }} }" 
      x-show="open" 
      @open-modal.window="open = true" 
      @keydown.escape.window="open = false"
@@ -80,31 +82,53 @@
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                             <h3 class="text-lg font-semibold leading-6 text-dark-navy mb-4">Pengajuan Izin Baru</h3>
+                            
+                            @if(session('error'))
+                            <div class="mb-4 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ session('error') }}
+                            </div>
+                            @endif
+
+                            @if($errors->any())
+                            <div class="mb-4 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm flex flex-col gap-1">
+                                <div class="flex items-center gap-2 font-semibold">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Terdapat kesalahan:
+                                </div>
+                                <ul class="list-disc list-inside ml-7">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
                             <form action="{{ route('intern.leave-requests.store') }}" method="POST" id="leaveForm">
                                 @csrf
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Izin</label>
                                         <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm">
-                                            <option value="Sakit">Sakit</option>
-                                            <option value="Izin">Izin Keperluan Pribadi</option>
-                                            <option value="Keperluan Kampus">Keperluan Kampus</option>
-                                            <option value="Lainnya">Lainnya</option>
+                                            <option value="Sakit" {{ old('type') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
+                                            <option value="Izin" {{ old('type') == 'Izin' ? 'selected' : '' }}>Izin Keperluan Pribadi</option>
+                                            <option value="Keperluan Kampus" {{ old('type') == 'Keperluan Kampus' ? 'selected' : '' }}>Keperluan Kampus</option>
+                                            <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                                         </select>
                                     </div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
-                                            <input type="date" name="date_start" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm">
+                                            <input type="date" name="date_start" value="{{ old('date_start') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
-                                            <input type="date" name="date_end" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm">
+                                            <input type="date" name="date_end" value="{{ old('date_end') }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm">
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Detail</label>
-                                        <textarea name="reason" rows="3" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm" placeholder="Jelaskan alasan izin Anda secara detail..."></textarea>
+                                        <textarea name="reason" rows="3" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 text-sm" placeholder="Jelaskan alasan izin Anda secara detail...">{{ old('reason') }}</textarea>
                                     </div>
                                 </div>
                             </form>

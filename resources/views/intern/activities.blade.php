@@ -5,18 +5,36 @@
         <h1 class="text-2xl font-bold text-dark-navy">Laporan Rangkuman Harian</h1>
         <p class="text-gray-500 mt-1">Isi rangkuman pekerjaan Anda hari ini. <strong class="text-danger">Maksimal 1 kali kirim per hari.</strong> Jika tidak mengisi sampai jam 23:59, akan otomatis dihitung Alpha.</p>
     </div>
-    
-    @if(!$hasSubmittedToday)
-    <button @click="$dispatch('open-modal')" class="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg shadow-primary-600/30 transition-all flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-        Buat Laporan Hari Ini
-    </button>
-    @else
-    <button disabled class="bg-gray-300 text-gray-500 px-5 py-2.5 rounded-lg font-medium cursor-not-allowed flex items-center gap-2">
-        <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        Laporan Selesai
-    </button>
-    @endif
+    <div class="flex flex-col sm:flex-row gap-2">
+        <a href="https://monev.maganghub.kemnaker.go.id/" target="_blank" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all flex items-center justify-center gap-2">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            Buka MagangHub
+        </a>
+        
+        @if(!$hasSubmittedToday)
+        <button @click="$dispatch('open-modal')" class="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg shadow-primary-600/30 transition-all flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Buat Laporan
+        </button>
+        @else
+        <button disabled class="bg-gray-300 text-gray-500 px-5 py-2.5 rounded-lg font-medium cursor-not-allowed flex items-center justify-center gap-2">
+            <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Laporan Selesai
+        </button>
+        @endif
+    </div>
+</div>
+
+<div class="mb-6 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 flex items-start gap-3 shadow-sm">
+    <svg class="w-6 h-6 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div>
+        <h4 class="font-semibold">Jangan lupa isi laporan di MagangHub Kemnaker!</h4>
+        <p class="text-sm mt-1">Setelah Anda mengisi laporan harian di website ini, pastikan Anda juga menyalin rangkuman pekerjaan tersebut ke website resmi MagangHub Kemnaker agar data Anda tersinkronisasi di pusat.</p>
+        <a href="https://monev.maganghub.kemnaker.go.id/" target="_blank" class="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-900 mt-2 underline">
+            Menuju website MagangHub Kemnaker
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        </a>
+    </div>
 </div>
 
 @if(session('success'))

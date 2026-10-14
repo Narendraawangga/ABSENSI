@@ -30,7 +30,9 @@ class DashboardController extends Controller
             ->latest()
             ->first();
 
-        return view('intern.dashboard', compact('attendance', 'activities', 'latestEvaluation'));
+        $announcements = \App\Models\Announcement::with('creator')->orderBy('created_at', 'desc')->take(3)->get();
+
+        return view('intern.dashboard', compact('attendance', 'activities', 'latestEvaluation', 'announcements'));
     }
 
     public function checkIn(Request $request)

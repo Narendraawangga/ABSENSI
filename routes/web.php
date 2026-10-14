@@ -34,7 +34,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/activities/{id}/comment', [ActivityController::class, 'addComment'])->name('activities.comment');
     Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+    
+    // Announcements routes
+    Route::get('/announcements', [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('announcements');
+    Route::post('/announcements', [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::delete('/announcements/{id}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+
+    // Gallery Documentation routes
+    Route::get('/gallery-docs', [\App\Http\Controllers\Admin\GalleryDocsController::class, 'index'])->name('gallery-docs');
+    Route::post('/gallery-docs', [\App\Http\Controllers\Admin\GalleryDocsController::class, 'store'])->name('gallery-docs.store');
+    Route::delete('/gallery-docs/{filename}', [\App\Http\Controllers\Admin\GalleryDocsController::class, 'destroy'])->name('gallery-docs.destroy');
 });
 
 // Intern Routes
